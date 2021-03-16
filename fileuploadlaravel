@@ -12,4 +12,10 @@
         return $path;
     }
 //}
+
+
+
+ //Move Uploaded File
+      $destinationPath = 'uploads';
+      $file->move($destinationPath,$file->getClientOriginalName());
 ?>
