@@ -18,4 +18,16 @@
  //Move Uploaded File
       $destinationPath = 'uploads';
       $file->move($destinationPath,$file->getClientOriginalName());
+      
+      
+      
+         
+
+        $request->validate([
+
+            'file' => 'required|mimes:pdf,xlx,csv|max:2048',
+
+        ]);
+        $fileName = time().'.'.$request->file->extension();  
+        $request->file->move(public_path('uploads'), $fileName);
 ?>
