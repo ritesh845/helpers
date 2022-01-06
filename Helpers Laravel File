@@ -59,3 +59,70 @@ if(!function_exists('displaywords')){
 }
 
 
+
+
+if (!function_exists('file_upload')) {
+    function file_upload($file, $folder, $field_name = null, $data = [])
+    {
+        if (!empty($data)) {
+            if ($data->$field_name != null) {
+                $img = str_replace('storage/', '', $data->$field_name);
+                Storage::delete('public/' . $img);
+            }
+        }
+
+        $name = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+        $file->storeAs('public/' . $folder, $name);
+        $path = 'storage/' . $folder . '/' . $name;
+
+        return [
+            'path' => $path,
+            'name' => $file->getClientOriginalName(),
+            'type' => $file->getClientOriginalExtension(),
+            'size' => $file->getSize(),
+        ];
+    }
+}
+
+
+if (!function_exists('slugify')) {
+    function slugify($text, string $divider = '-')
+    {
+        // replace non letter or digits by divider
+        $text = preg_replace('~[^\pL\d]+~u', $divider, $text);
+        // transliterate
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        // trim
+        $text = trim($text, $divider);
+        // remove duplicate divider
+        $text = preg_replace('~-+~', $divider, $text);
+        // lowercase
+        $text = strtolower($text);
+        if (empty($text)) {
+            return 'n-a';
+        }
+        return $text;
+    }
+}
+if (!function_exists('thousandsCurrencyFormat')) {
+
+    function thousandsCurrencyFormat($num)
+    {
+        if ($num > 1000) {
+            $x = round($num);
+            $x_number_format = number_format($x);
+            $x_array = explode(',', $x_number_format);
+            $x_parts = array('k', 'm', 'b', 't');
+            $x_count_parts = count($x_array) - 1;
+            $x_display = $x;
+            $x_display = $x_array[0] . ((int)$x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '');
+            $x_display .= $x_parts[$x_count_parts - 1];
+            return $x_display;
+        }
+        return number_format($num);
+    }
+}
+
+
